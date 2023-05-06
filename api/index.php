@@ -1,6 +1,6 @@
 <?php
 // 设置API路径
-define('API_URI', '/meting-api');
+define('API_URI', 'https://moeyy.cn/meting-api');
 // 设置中文歌词
 define('TLYRIC', true);
 // 设置歌单文件缓存及时间
