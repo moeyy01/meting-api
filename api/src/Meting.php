@@ -629,7 +629,7 @@ class Meting
 
         return $this->exec($api);
     }
-
+    private $temp = [];
     public function url($id, $br = 320)
     {
         switch ($this->server) {
@@ -990,13 +990,13 @@ class Meting
             $body = openssl_encrypt($body, 'aes-128-cbc', $skey, false, $vi);
         } else {
             $pad = 16 - (strlen($body) % 16);
-            $body = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $nonce, $body.str_repeat(chr($pad), $pad), MCRYPT_MODE_CBC, $vi));
+            $body = base64_encode(openssl_encrypt($body . str_repeat(chr($pad), $pad), 'aes-128-cbc', $nonce, 0, $vi));
             $pad = 16 - (strlen($body) % 16);
-            $body = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $skey, $body.str_repeat(chr($pad), $pad), MCRYPT_MODE_CBC, $vi));
+            $body = base64_encode(openssl_encrypt($body . str_repeat(chr($pad), $pad), 'aes-128-cbc', $skey, 0, $vi));
         }
 
         if (extension_loaded('bcmath')) {
-            $skey = strrev(utf8_encode($skey));
+            $skey = strrev($skey);
             $skey = $this->bchexdec($this->str2hex($skey));
             $skey = bcpowmod($skey, $pubkey, $modulus);
             $skey = $this->bcdechex($skey);
